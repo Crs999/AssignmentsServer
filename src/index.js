@@ -1,17 +1,43 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import Koa from 'koa';
+import WebSocket from 'ws';
+import http from 'http';
+import Router from 'koa-router';
+import bodyParser from "koa-bodyparser";
+import { timingLogger, exceptionHandler, jwtConfig, initWss, verifyClient } from './utils';
+import { router as noteRouter } from './assignment';
+import { router as authRouter } from './authentication';
+import jwt from 'koa-jwt';
+import cors from '@koa/cors';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+const app = new Koa();
+const server = http.createServer(app.callback());
+const wss = new WebSocket.Server({ server });
+initWss(wss);
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+app.use(cors());
+app.use(timingLogger);
+app.use(exceptionHandler);
+app.use(bodyParser());
+
+const prefix = '/api';
+
+// public
+const publicApiRouter = new Router({ prefix });
+publicApiRouter
+    .use('/auth', authRouter.routes());
+app
+    .use(publicApiRouter.routes())
+    .use(publicApiRouter.allowedMethods());
+
+app.use(jwt(jwtConfig));
+
+// protected
+const protectedApiRouter = new Router({ prefix });
+protectedApiRouter
+    .use('/assignment', noteRouter.routes());
+app
+    .use(protectedApiRouter.routes())
+    .use(protectedApiRouter.allowedMethods());
+
+server.listen(3000);
+console.log('started on port 3000');
