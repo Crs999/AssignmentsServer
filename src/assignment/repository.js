@@ -29,4 +29,4 @@ export class AssignmentRepo{
     }
 }
 
-export default new AssignmentRepo({filename: 'D:\\Faculta\\AnIII_sem.1\\Mobile\\Laborator\\Lab_app\\server\\database\\assignments.json', autoload:true});
+export default new AssignmentRepo({filename: 'D:\\Faculta\\AnIII_sem.1\\Mobile\\Laborator\\AssignmentsApp\\server\\database\\assignments.json', autoload:true});

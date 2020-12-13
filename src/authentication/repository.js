@@ -14,4 +14,4 @@ export class UserRepository{
     };
 }
 
-export default new UserRepository({filename:'D:\\Faculta\\AnIII_sem.1\\Mobile\\Laborator\\Lab_app\\server\\database\\pupils.json', autoload: true});
+export default new UserRepository({filename:'D:\\Faculta\\AnIII_sem.1\\Mobile\\Laborator\\AssignmentsApp\\server\\database\\pupils.json', autoload: true});
