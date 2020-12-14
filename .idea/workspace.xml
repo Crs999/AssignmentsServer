@@ -13,10 +13,7 @@
     <list default="true" id="beac5846-fe94-41bc-8d32-20ebc4b0df86" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/database/assignments.json" beforeDir="false" afterPath="$PROJECT_DIR$/database/assignments.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/pupils.json" beforeDir="false" afterPath="$PROJECT_DIR$/database/pupils.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/assignment/repository.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/assignment/repository.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/assignment/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/assignment/router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/authentication/repository.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/authentication/repository.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,6 +60,8 @@
       <workItem from="1607766282607" duration="24497000" />
       <workItem from="1607851039509" duration="18000" />
       <workItem from="1607851066540" duration="5209000" />
+      <workItem from="1607886942418" duration="1348000" />
+      <workItem from="1607934951186" duration="3044000" />
     </task>
     <servers />
   </component>

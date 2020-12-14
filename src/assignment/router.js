@@ -12,19 +12,21 @@ router.get('/', async (context)=>{
 
 const createAssignment=async(context, assignment, response)=>{
   try {
-      let userID=assignment.pupilID
-      assignment.pupilID = context.state.user._id;
-      response.body = await assignmentRepo.insert(assignment);
+      let userID=context.state.user._id;
+      assignment.pupilID = userID
+      let respAsign = await assignmentRepo.insert(assignment);
+      response.body=respAsign
       response.status = 201;
-      // broadcast(userID, {type: 'created', payload: assignment});
+      assignment._id=respAsign._id;
+      broadcast(userID, {type: 'created', payload: assignment});
   }catch(err){
       response.body={message:err.message};
       response.status=400;
   }
 };
 
-router.post('/', async context=>
-    await(createAssignment(context, context.request.body, context.response)));
+router.post('/', async context=>{
+    await(createAssignment(context, context.request.body, context.response))});
 
 router.put('/:id', async(context)=>{
    const assignment=context.request.body;
@@ -43,7 +45,6 @@ router.put('/:id', async(context)=>{
        if(updatedCount===1){
            response.body=assignment;
            response.status=200;
-           // broadcast(userID, {type: 'updated', payload: assignment});
        }else{
            response.body={message:'Assignment no longer exists'};
            response.status=405;
@@ -61,7 +62,7 @@ router.put('/conflict/:id', async(context)=>{
     if(updatedCount===1){
         response.body=assignment;
         response.status=200;
-        broadcast(userID, {type: 'updated', payload: assignment});
+        broadcast(userID, {type: 'resolvedConflict', payload: assignment});
     }else{
         response.body={message:'Assignment no longer exists'};
         response.status=405;
