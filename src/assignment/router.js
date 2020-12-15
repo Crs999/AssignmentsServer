@@ -6,6 +6,7 @@ export const router=new Router();
 router.get('/', async (context)=>{
     const response=context.response;
     let pupilID=context.state.user._id;
+    // console.log(await assignmentRepo.find({pupilID: pupilID}))
     response.body=await assignmentRepo.find({pupilID: pupilID});
     response.status=200;
 });
@@ -58,6 +59,7 @@ router.put('/conflict/:id', async(context)=>{
     const id=context.params.id;
     const response=context.response;
     assignment.pupilID=userID
+    assignment.version=new Date().toUTCString()
     const updatedCount=await assignmentRepo.update({_id:id},assignment);
     if(updatedCount===1){
         response.body=assignment;
@@ -67,6 +69,21 @@ router.put('/conflict/:id', async(context)=>{
         response.body={message:'Assignment no longer exists'};
         response.status=405;
     }
+});
+
+router.get('/conflict/:id', async (context)=>{
+    const response=context.response;
+    let pupilID=context.state.user._id;
+    let id=context.params.id
+    let version=context.header['if-modified-since']
+    let serverAssignment=await assignmentRepo.findOne({_id:id});
+    if(Date.parse(serverAssignment.version)>=Date.parse(version)){
+        response.status=200
+        response.body=serverAssignment
+    }else{
+        response.status=304
+    }
+
 });
 
 router.post('/sync', async(context)=>{
@@ -82,8 +99,10 @@ router.post('/sync', async(context)=>{
             localAssign._id=undefined;
             await assignmentRepo.insert(localAssign)
         } else {
-            if (inRepo && (inRepo.description !== localAssign.description || inRepo.title !== localAssign.title || inRepo.date !== localAssign.date)) {
-                if(inRepo.version>=localAssign.version) versionConflicts.push(inRepo)
+            if (inRepo && (inRepo.lng!==localAssign.lng || inRepo.lat!==localAssign.lat || inRepo.photoURL!==localAssign.photoURL || inRepo.description !== localAssign.description || inRepo.title !== localAssign.title || inRepo.date !== localAssign.date)) {
+                let inRepoVersion=Date.parse(inRepo.version)
+                let localVersion=Date.parse(localAssign.version)
+                if(inRepoVersion>=localVersion) versionConflicts.push(localAssign._id)
                 else await assignmentRepo.update({_id: localAssign._id}, localAssign)
             }
         }
